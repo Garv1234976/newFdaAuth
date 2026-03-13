@@ -138,9 +138,12 @@ useEffect(() => {
       });
 
       const response = res.data;
+console.log('response')
+       console.log(response)
+
 
       if (response?.success === "YES") {
-
+       
         const userData = {
           phone,
           userId,

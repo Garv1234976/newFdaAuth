@@ -442,7 +442,9 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     marginBottom: 15,
-    fontSize: 20
+    fontSize: 20,
+            borderWidth: 1,
+        borderColor : '#d3d3d3'
   },
 
   otpCard: {
@@ -454,6 +456,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     elevation: 2,
+        borderWidth: 1,
+        borderColor : '#d3d3d3'
     
   },
 

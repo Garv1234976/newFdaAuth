@@ -263,7 +263,12 @@ Icon={() => (
     paddingHorizontal: 12,
     paddingRight: 40,
     color: '#000', 
+    backgroundColor: '#e2e2e2',
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor : '#7c7c7c'
   },
+
     placeholder: {
     color: '#fff', // placeholder color
   },
