@@ -186,20 +186,30 @@ export default function DashboardScreen({ navigation }: Props) {
     }
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+
+  //   if (Platform.OS !== 'android') return;
+
+  //   verifyUserSIM();
+
+  //   const interval = setInterval(() => {
+  //     verifyUserSIM();
+  //   }, 5000); // check every 5 seconds
+
+  //   return () => clearInterval(interval);
+
+  // }, []);
+
+
+  useFocusEffect(
+  useCallback(() => {
 
     if (Platform.OS !== 'android') return;
 
     verifyUserSIM();
 
-    const interval = setInterval(() => {
-      verifyUserSIM();
-    }, 5000); // check every 5 seconds
-
-    return () => clearInterval(interval);
-
-  }, []);
-
+  }, [])
+);
   const openDrawer = () => {
     setOpen(true);
 

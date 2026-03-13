@@ -1,7 +1,9 @@
 
+import { Platform } from 'react-native';
 import SimCardsManager from 'react-native-sim-cards-manager';
 
 export const getDeviceSIMs = async () => {
+  if (Platform.OS !== "android") return [];
   try {
 
     const data = await SimCardsManager.getSimCardsNative();

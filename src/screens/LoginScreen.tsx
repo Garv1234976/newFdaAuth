@@ -42,9 +42,11 @@ export default function LoginScreen({ navigation }: Props) {
     type: 'success',
     message: ''
   });
-  useEffect(() => {
+useEffect(() => {
+  if (Platform.OS === 'android') {
     requestPermission();
-  }, []);
+  }
+}, []);
 
   const requestPermission = async () => {
 
