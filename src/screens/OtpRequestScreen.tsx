@@ -8,13 +8,12 @@ import {
   StyleSheet,
   ActivityIndicator,
   StatusBar,
-  
   Alert,
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-
-import { Picker } from '@react-native-picker/picker';
+import RNPickerSelect from 'react-native-picker-select';
+import { ChevronDown } from "lucide-react-native";
 import { useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
@@ -26,6 +25,7 @@ import StatusModal from '../StatusModal';
 export default function OtpRequestScreen() {
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
+  const pickerRef = React.useRef(null);
 
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
@@ -189,22 +189,22 @@ export default function OtpRequestScreen() {
     }
   };
 
-  useEffect(() => {
-    if (!user?.otpTypes) return;
+useEffect(() => {
+  if (!user?.otpTypes) return;
 
-    const types = Object.entries(user.otpTypes).map(([key, value]) => ({
-      key,
-      label: value,
-    }));
+  const types = Object.entries(user.otpTypes).map(([key, value]) => ({
+    label: value, // shown in dropdown
+    value: key,   // used for API
+  }));
 
-    setOtpTypes(types);
+  setOtpTypes(types);
 
-    if (types.length > 0) {
-      setOtpType(types[0].key);
-    }
-  }, [user]);
-  const selectedOtpLabel =
-    otpTypes.find(t => t.key === otpType)?.label || otpType;
+  if (types.length > 0) {
+    setOtpType(types[0].value);
+  }
+}, [user]);
+const selectedOtpLabel =
+  otpTypes.find(t => t.value === otpType)?.label || otpType;
   return (
     <>
       <View style={styles.container}>
@@ -226,33 +226,60 @@ export default function OtpRequestScreen() {
 
         {/* Title Input */}
 
-        <View style={styles.pickerBox}>
-          {otpTypes.length === 0 ? (
-            <View style={{ padding: 15, alignItems: 'center' }}>
-              <ActivityIndicator size="small" color="#007AFF" />
-              <Text style={{ marginTop: 5, color: '#777' }}>
-                Loading OTP Types...
-              </Text>
-            </View>
-          ) : (
-            <Picker
-              selectedValue={otpType}
-              onValueChange={itemValue => {
-                setOtpType(itemValue);
 
-                // clear previous OTP when switching site
-                setOtp('');
-                setOtpTime('');
-              }}
-              dropdownIconColor={'#333'}
-              style={{ color: '#333' , fontSize: 20}}
-            >
-              {otpTypes.map(type => (
-                <Picker.Item key={type.key} label={type.label} value={type.key} style={{fontSize: 20}} />
-              ))}
-            </Picker>
-          )}
-        </View>
+     <View style={styles.pickerBox}>
+  <RNPickerSelect
+    ref={pickerRef}
+    value={otpType}
+    onValueChange={(value) => {
+      setOtpType(value);
+      setOtp('');
+      setOtpTime('');
+    }}
+    items={otpTypes}
+    placeholder={{ label: "---", value: null }}
+    useNativeAndroidPickerStyle={false}
+
+    touchableWrapperProps={{
+      activeOpacity: 0.7
+    }}
+    
+      pickerProps={{
+    itemStyle: {
+      color: 'black', 
+    },
+  }}
+Icon={() => (
+  <ChevronDown size={20} color="#555" pointerEvents="none" />
+)}
+
+    style={{
+      
+  inputIOS: {
+    height: 48,
+    width: '100%',
+    fontSize: 18,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    paddingRight: 40,
+    color: '#000', 
+  },
+    placeholder: {
+    color: '#fff', // placeholder color
+  },
+      inputIOSContainer: {
+         zIndex: 100,
+      height: 48, // Ensure the container has the same height
+      width: '100%',
+    },
+      iconContainer: {
+    top: 16,
+    right: 12,
+  },
+
+}}
+  />
+</View>
 
         {/* Button */}
 
@@ -378,11 +405,15 @@ const styles = StyleSheet.create({
   meta: {
     color: '#666',
   },
-  pickerBox: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    marginBottom: 15,
-  },
+pickerBox: {
+  
+  borderRadius: 10,
+  marginBottom: 15,
+  justifyContent: 'center',
+  borderWidth: 1,
+  borderColor: '#ddd',
+  
+},
   copyHint: {
     fontSize: 14,
     color: '#999',
